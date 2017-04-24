@@ -91,8 +91,8 @@ function update() {
 	throwObject();
 
 	points.push({
-		x: game.input.activePointer.x,
-		y: game.input.activePointer.y
+		x: game.input.touch.x,
+		y: game.input.touch.y
 	});
 	points = points.splice(points.length-10, points.length);
 	//game.add.sprite(game.input.x, game.input.y, 'hit');
@@ -129,8 +129,8 @@ function checkIntersects(fruit, callback) {
 	if(Phaser.Line.intersects(line, l1, true) ||
 		 Phaser.Line.intersects(line, l2, true)) {
 
-		contactPoint.x = game.input.activePointer.x;
-		contactPoint.y = game.input.activePointer.y;
+		contactPoint.x = game.input.touch.x;
+		contactPoint.y = game.input.touch.y;
 		var distance = Phaser.Point.distance(contactPoint, new Phaser.Point(fruit.x, fruit.y));
 		if (Phaser.Point.distance(contactPoint, new Phaser.Point(fruit.x, fruit.y)) > 110) {
 			return;
