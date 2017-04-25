@@ -1,57 +1,81 @@
 var w = window.innerWidth,
-		h = window.innerHeight;
+	h = window.innerHeight;
 
-var game = new Phaser.Game(w, h, Phaser.AUTO, 'game',
-		{ preload: preload, create: create, update: update, render: render });
-//var gameTimer = new Phaser.Timer(game);
+var game = new Phaser.Game(w, h, Phaser.AUTO, 'game');
+
+	game.state.add('pre', {preload: preStatePreload, create: preStateCreate });
+	game.state.add('main', { preload: preload, create: create, update: update, render: render });
+	game.state.start("pre");
+
+function preStatePreload() {
+ 	game.load.image('startButton','img/test2.png');
+}
+
+function preStateCreate() {
+	game.stage.backgroundColor = '#182d3b';
+
+	var preLabel = game.add.text(10,10,'Pre State');
+	preLabel.fill = 'white';
+
+	var StartButton = game.add.button(game.world.centerX - 95, 400, 'startButton', onStartClick, this, 2, 1, 0);
+
+	function onStartClick () {
+		game.state.start('main');
+	}
+}
+
 function preload() {
-	var bmd = game.add.bitmapData(100,100);
-	bmd.ctx.fillStyle = '#00ff00';
-	bmd.ctx.arc(50,50,50, 0, Math.PI * 2);
-	bmd.ctx.fill();
-	game.cache.addBitmapData('good', bmd);
-
-	var bmd = game.add.bitmapData(64,64);
-	bmd.ctx.fillStyle = '#ff0000';
-	bmd.ctx.arc(32,32,32, 0, Math.PI * 2);
-	bmd.ctx.fill();
-	game.cache.addBitmapData('bad', bmd);
+	game.load.image('test1', 'img/test1.png'),
+	game.load.image('test1-frag', 'img/test1-frag.png'),
+	game.load.image('test2', 'img/test2.png'),
+	game.load.image('test2-frag', 'img/test2-frag.png');
 }
 
 var good_objects,
-		bad_objects,
-		slashes,
-		line,
-		scoreLabel,
-		score = 0,
-		points = [];	
+	bad_objects,
+	slashes,
+	line,
+	scoreLabel,
+	score = 0,
+	points = [];
+
+var testObj1,
+	testObj2,
+	emtr1,
+	emtr2
 
 var fireRate = 1000;
 var nextFire = 0;
 
+var isActive = true;
+
 
 function create() {
-
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.physics.arcade.gravity.y = 300;
-
-	good_objects = createGroup(4, game.cache.getBitmapData('good'));
-	bad_objects = createGroup(4, game.cache.getBitmapData('bad'));
 
 	slashes = game.add.graphics(0, 0);
 
 	scoreLabel = game.add.text(10,10,'Tip: get the green ones!');
 	scoreLabel.fill = 'white';
-  
+
 	timeLabel = game.add.text(w - 150,10,'time:20');
 	timeLabel.fill = 'white';
-  
-	emitter = game.add.emitter(0, 0, 300);
-	emitter.makeParticles('parts');
-	emitter.gravity = 300;
-	emitter.setYSpeed(-400,400);
-  	game.time.events.add(Phaser.Timer.SECOND *20,resetScore,this);
-  
+
+	testObj1 = createGroup(4, 'test1');
+	emtr1 = game.add.emitter(0, 0, 300);
+	emtr1.makeParticles('test1-frag');
+	emtr1.gravity = 300;
+	emtr1.setYSpeed(-400,400);
+
+	testObj2 = createGroup(4, 'test2');
+	emtr2 = game.add.emitter(0, 0, 300);
+	emtr2.makeParticles('test2-frag');
+	emtr2.gravity = 300;
+	emtr2.setYSpeed(-400,400);
+
+	game.time.events.add(Phaser.Timer.SECOND * 20, gameOver, this);
+
 	throwObject();
 }
 
@@ -66,7 +90,7 @@ function createGroup (numItems, sprite) {
 }
 
 function throwObject() {
-	if (game.time.now > nextFire && good_objects.countDead()>0 && bad_objects.countDead()>0) {
+	if (game.time.now > nextFire && testObj1.countDead()>0 && testObj2.countDead()>0) {
 		nextFire = game.time.now + fireRate;
 		throwGoodObject();
 		if (Math.random()>.5) {
@@ -76,25 +100,26 @@ function throwObject() {
 }
 
 function throwGoodObject() {
-	var obj = good_objects.getFirstDead();
+	var obj = testObj1.getFirstDead();
 	obj.reset(game.world.centerX + Math.random()*100-Math.random()*100, 600);
 	obj.anchor.setTo(0.5, 0.5);
-	//obj.body.angularAcceleration = 100;
+	obj.body.angularAcceleration = 100;
 	game.physics.arcade.moveToXY(obj, game.world.centerX, game.world.centerY, 530);
 }
 
 function throwBadObject() {
-	var obj = bad_objects.getFirstDead();
+	var obj = testObj2.getFirstDead();
 	obj.reset(game.world.centerX + Math.random()*100-Math.random()*100, 600);
 	obj.anchor.setTo(0.5, 0.5);
-	//obj.body.angularAcceleration = 100;
+	obj.body.angularAcceleration = 100;
 	game.physics.arcade.moveToXY(obj, game.world.centerX, game.world.centerY, 530);
 }
 
 function update() {
-	throwObject();
-
-  timeLabel.text = 'time:' + game.time.events.duration / Phaser.Timer.SECOND;
+	if (isActive) {
+		throwObject();
+  		timeLabel.text = 'time:' + Math.round(game.time.events.duration / Phaser.Timer.SECOND);
+	}
 	points.push({
 		x: game.input.x,
 		y: game.input.y
@@ -112,15 +137,19 @@ function update() {
 	slashes.moveTo(points[0].x, points[0].y);
 	for (var i=1; i<points.length; i++) {
 		slashes.lineTo(points[i].x, points[i].y);
-	} 
+	}
 	slashes.endFill();
 
 	for(var i = 1; i< points.length; i++) {
 		line = new Phaser.Line(points[i].x, points[i].y, points[i-1].x, points[i-1].y);
-		game.debug.geom(line);
-
-		good_objects.forEachExists(checkIntersects);
-		bad_objects.forEachExists(checkIntersects);
+		// game.debug.geom(line);
+		if (isActive){
+			testObj1.forEachExists(checkIntersects);
+			testObj2.forEachExists(checkIntersects);
+		}
+	}
+	if (game.input.activePointer.isDown && !isActive) {
+		gameRestart();
 	}
 }
 
@@ -132,7 +161,7 @@ function checkIntersects(fruit, callback) {
 	l2.angle = 90;
 
 	if(Phaser.Line.intersects(line, l1, true) ||
-		 Phaser.Line.intersects(line, l2, true)) {
+		Phaser.Line.intersects(line, l2, true)) {
 
 		contactPoint.x = game.input.x;
 		contactPoint.y = game.input.y;
@@ -141,37 +170,52 @@ function checkIntersects(fruit, callback) {
 			return;
 		}
 
-		if (fruit.parent == good_objects) {
-			killFruit(fruit);
-		} else {
-			resetScore();	
-		}
+		killFruit(fruit);
+
+		// if (fruit.parent == testObj1) {
+			// killFruit(fruit);
+		// } else {
+			// gameOver();
+		// }
 	}
 
 }
 
+function gameOver() {
+	isActive = false;
+	console.info(score)
+ 	var highscore = Math.max(score, sessionStorage.getItem("pfcHighscore"));
+	sessionStorage.setItem("pfcHighscore", highscore);
+	scoreLabel.text = 'Game Over!\nHigh Score: '+highscore+'\nPress to Restart.';
+}
+
+function gameRestart() {
+	isActive = true;
+	resetScore();
+  	game.time.reset();
+	game.state.restart();
+}
+
 function resetScore() {
-	var highscore = Math.max(score, localStorage.getItem("highscore"));
-	localStorage.setItem("highscore", highscore);
-
-	good_objects.forEachExists(killFruit);
-	bad_objects.forEachExists(killFruit);
-
+	testObj1.forEachExists(killFruit);
+	testObj2.forEachExists(killFruit);
 	score = 0;
-	scoreLabel.text = 'Game Over!\nHigh Score: '+highscore;
-  game.time.events.stop();
-  
-	// Retrieve
 }
 
 function render() {
 }
 
 function killFruit(fruit) {
+	if (fruit.key === 'test1') {
+		emtr1.x = fruit.x;
+		emtr1.y = fruit.y;
+		emtr1.start(true, 2000, null, 2);
+	} else if (fruit.key === 'test2') {
+		emtr2.x = fruit.x;
+		emtr2.y = fruit.y;
+		emtr2.start(true, 2000, null, 2);
+	}
 
-	emitter.x = fruit.x;
-	emitter.y = fruit.y;
-	emitter.start(true, 2000, null, 4);
 	fruit.kill();
 	points = [];
 	score++;
