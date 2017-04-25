@@ -3,7 +3,7 @@ var w = window.innerWidth,
 
 var game = new Phaser.Game(w, h, Phaser.AUTO, 'game',
 		{ preload: preload, create: create, update: update, render: render });
-
+//var gameTimer = new Phaser.Timer(game);
 function preload() {
 	var bmd = game.add.bitmapData(100,100);
 	bmd.ctx.fillStyle = '#00ff00';
@@ -24,7 +24,7 @@ var good_objects,
 		line,
 		scoreLabel,
 		score = 0,
-		points = [];
+		points = [];	
 
 var fireRate = 1000;
 var nextFire = 0;
@@ -42,12 +42,16 @@ function create() {
 
 	scoreLabel = game.add.text(10,10,'Tip: get the green ones!');
 	scoreLabel.fill = 'white';
-
+  
+	timeLabel = game.add.text(w - 150,10,'time:20');
+	timeLabel.fill = 'white';
+  
 	emitter = game.add.emitter(0, 0, 300);
 	emitter.makeParticles('parts');
 	emitter.gravity = 300;
 	emitter.setYSpeed(-400,400);
-
+  	game.time.events.add(Phaser.Timer.SECOND *20,resetScore,this);
+  
 	throwObject();
 }
 
@@ -90,6 +94,7 @@ function throwBadObject() {
 function update() {
 	throwObject();
 
+  timeLabel.text = 'time:' + game.time.events.duration / Phaser.Timer.SECOND;
 	points.push({
 		x: game.input.x,
 		y: game.input.y
@@ -107,7 +112,7 @@ function update() {
 	slashes.moveTo(points[0].x, points[0].y);
 	for (var i=1; i<points.length; i++) {
 		slashes.lineTo(points[i].x, points[i].y);
-	}
+	} 
 	slashes.endFill();
 
 	for(var i = 1; i< points.length; i++) {
@@ -139,7 +144,7 @@ function checkIntersects(fruit, callback) {
 		if (fruit.parent == good_objects) {
 			killFruit(fruit);
 		} else {
-			resetScore();
+			resetScore();	
 		}
 	}
 
@@ -154,6 +159,8 @@ function resetScore() {
 
 	score = 0;
 	scoreLabel.text = 'Game Over!\nHigh Score: '+highscore;
+  game.time.events.stop();
+  
 	// Retrieve
 }
 
