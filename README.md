@@ -1,3 +1,3 @@
 # pfc
 phaser-fruitNinja-clone
-# by zyc
+# by zyc 日他哥
