@@ -4,9 +4,11 @@ var w = window.innerWidth,
 var game = new Phaser.Game(w, h, Phaser.AUTO, 'game');
 
 	game.state.add('pre', {preload: preStatePreload, create: preStateCreate });
+	game.state.add('intro', {preload: introStatePreload, create: introStateCreate });
 	game.state.add('main', { preload: preload, create: create, update: update, render: render });
+	game.state.add('score', {preload: scoreStatePreload, create: scoreStateCreate });
 	game.state.start("pre");
-
+//开始界面
 function preStatePreload() {
  	game.load.image('startButton','img/test2.png');
 }
@@ -14,7 +16,24 @@ function preStatePreload() {
 function preStateCreate() {
 	game.stage.backgroundColor = '#182d3b';
 
-	var preLabel = game.add.text(10,10,'Pre State');
+	var preLabel = game.add.text(game.world.centerX-110,200,'京爷切菜');
+	preLabel.fill = 'white';
+
+	var StartButton = game.add.button(game.world.centerX - 95, 400, 'startButton', onStartClick, this, 2, 1, 0);
+
+	function onStartClick () {
+		game.state.start('intro');
+	}
+}
+//说明界面
+function introStatePreload() {
+ 	game.load.image('startButton','img/test2.png');
+}
+
+function introStateCreate() {
+	game.stage.backgroundColor = '#182d3b';
+
+	var preLabel = game.add.text(game.world.centerX-130,200,'游戏玩法说明');
 	preLabel.fill = 'white';
 
 	var StartButton = game.add.button(game.world.centerX - 95, 400, 'startButton', onStartClick, this, 2, 1, 0);
@@ -23,12 +42,16 @@ function preStateCreate() {
 		game.state.start('main');
 	}
 }
-
+//游戏界面
 function preload() {
 	game.load.image('test1', 'img/test1.png'),
 	game.load.image('test1-frag', 'img/test1-frag.png'),
 	game.load.image('test2', 'img/test2.png'),
 	game.load.image('test2-frag', 'img/test2-frag.png');
+	game.load.image('1','img/1.png');
+	game.load.image('2','img/2.png');
+	game.load.image('3','img/3.png');
+	game.load.image('4','img/start.png');
 }
 
 var good_objects,
@@ -44,11 +67,11 @@ var testObj1,
 	emtr1,
 	emtr2
 
-var fireRate = 1000;
+var fireRate = 300;//水果的频率
+var eggRate = 0.1;//鸡蛋的概率
 var nextFire = 0;
 
 var isActive = true;
-
 
 function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -56,10 +79,10 @@ function create() {
 
 	slashes = game.add.graphics(0, 0);
 
-	scoreLabel = game.add.text(10,10,'Tip: get the green ones!');
+	scoreLabel = game.add.text(w/2-50,h-130,'0分');
 	scoreLabel.fill = 'white';
 
-	timeLabel = game.add.text(w - 150,10,'time:20');
+	timeLabel = game.add.text(10,10,'time:20');
 	timeLabel.fill = 'white';
 
 	testObj1 = createGroup(4, 'test1');
@@ -74,9 +97,29 @@ function create() {
 	emtr2.gravity = 300;
 	emtr2.setYSpeed(-400,400);
 
-	game.time.events.add(Phaser.Timer.SECOND * 20, gameOver, this);
-
-	throwObject();
+	gameTime = game.time.create(false);
+	//倒计时
+	isActive = false;
+	countDownSpr = game.add.sprite(w/2-80, h/2, '1');
+	countDownTime = game.time.create();
+	countDownTime.loop(Phaser.Timer.SECOND,countDownFunc,this);
+	countDown = 1;
+	countDownTime.start();
+}
+var countDown;
+function countDownFunc () {
+	countDown++;
+	countDownSpr.loadTexture(countDown);
+	if (countDown == 4)
+		countDownSpr.x = w/2-200;
+	if (countDown >= 5) {
+		countDownTime.stop();
+		gameTime.add(Phaser.Timer.SECOND * 20, gameOver, this);
+		gameTime.start();
+		isActive = true;
+		countDownSpr.visible = false;
+	}
+	
 }
 
 function createGroup (numItems, sprite) {
@@ -93,7 +136,7 @@ function throwObject() {
 	if (game.time.now > nextFire && testObj1.countDead()>0 && testObj2.countDead()>0) {
 		nextFire = game.time.now + fireRate;
 		throwGoodObject();
-		if (Math.random()>.5) {
+		if (Math.random()>eggRate) {
 			throwBadObject();
 		}
 	}
@@ -118,7 +161,7 @@ function throwBadObject() {
 function update() {
 	if (isActive) {
 		throwObject();
-  		timeLabel.text = 'time:' + Math.round(game.time.events.duration / Phaser.Timer.SECOND);
+  		timeLabel.text = 'time:' + Math.round(gameTime.duration / Phaser.Timer.SECOND);
 	}
 	points.push({
 		x: game.input.x,
@@ -148,9 +191,9 @@ function update() {
 			testObj2.forEachExists(checkIntersects);
 		}
 	}
-	if (game.input.activePointer.isDown && !isActive) {
-		gameRestart();
-	}
+//	if (game.input.activePointer.isDown && !isActive) {
+//		gameRestart();
+//	}
 }
 
 var contactPoint = new Phaser.Point(0,0);
@@ -178,28 +221,11 @@ function checkIntersects(fruit, callback) {
 			// gameOver();
 		// }
 	}
-
 }
 
 function gameOver() {
 	isActive = false;
-	console.info(score)
- 	var highscore = Math.max(score, sessionStorage.getItem("pfcHighscore"));
-	sessionStorage.setItem("pfcHighscore", highscore);
-	scoreLabel.text = 'Game Over!\nHigh Score: '+highscore+'\nPress to Restart.';
-}
-
-function gameRestart() {
-	isActive = true;
-	resetScore();
-  	game.time.reset();
-	game.state.restart();
-}
-
-function resetScore() {
-	testObj1.forEachExists(killFruit);
-	testObj2.forEachExists(killFruit);
-	score = 0;
+	game.state.start('score');
 }
 
 function render() {
@@ -209,15 +235,50 @@ function killFruit(fruit) {
 	if (fruit.key === 'test1') {
 		emtr1.x = fruit.x;
 		emtr1.y = fruit.y;
+		score += 2;
 		emtr1.start(true, 2000, null, 2);
 	} else if (fruit.key === 'test2') {
 		emtr2.x = fruit.x;
 		emtr2.y = fruit.y;
+		//score -= 5;现在主要是俩图片长的太像了，就没直接改
 		emtr2.start(true, 2000, null, 2);
 	}
 
 	fruit.kill();
 	points = [];
-	score++;
-	scoreLabel.text = 'Score: ' + score;
+	
+	scoreLabel.text = score + '分';
+}
+//得分面板
+function scoreStatePreload() {
+ 	game.load.image('restartButton','img/restartButton.png');
+	game.load.image('shareButton','img/shareButton.png');
+}
+
+function scoreStateCreate() {
+	game.stage.backgroundColor = '#182d3b';
+
+	var preLabel = game.add.text(game.world.centerX-110,200,'游戏结束');
+	preLabel.fill = 'white';
+
+	game.add.button(game.world.centerX - 195, 400, 'restartButton', onRestartClick, this, 2, 1, 0);
+	game.add.button(game.world.centerX + 95, 400, 'shareButton', onShareButtonClick, this, 2, 1, 0);
+
+	//判断得分，然后显示WIN或者LOSE，今天没时间了，明天整
+
+	console.info(score)
+ 	var highscore = Math.max(score, sessionStorage.getItem("pfcHighscore"));
+	sessionStorage.setItem("pfcHighscore", highscore);
+	scoreLabel.text = 'Game Over!\n最高分: '+highscore+'\n当前得分:'+score+'\nPress to Restart.';//改
+
+	function onRestartClick () {
+		isActive = true;
+		score = 0;
+		game.time.reset();
+		game.state.start('main');
+	}
+
+	function onShareButtonClick () {
+		//调用朋友圈分享接口
+	}
 }
