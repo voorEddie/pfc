@@ -51,10 +51,10 @@ function preload() {
 		game.load.image('test1-frag', 'img/test1-frag.png'),
 		game.load.image('test2', 'img/test2.png'),
 		game.load.image('test2-frag', 'img/test2-frag.png');
-	game.load.image('3', 'img/1.png');
-	game.load.image('2', 'img/2.png');
-	game.load.image('1', 'img/3.png');
-	game.load.image('4', 'img/start.png');
+	game.load.image('3', 'img/djs1.png');
+	game.load.image('2', 'img/djs2.png');
+	game.load.image('1', 'img/djs3.png');
+	game.load.image('4', 'img/djs0.png');
 }
 
 var good_objects,
