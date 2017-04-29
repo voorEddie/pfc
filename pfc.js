@@ -17,7 +17,7 @@ function preStatePreload() {
 function preStateCreate() {
 	game.stage.backgroundColor = '#182d3b';
 
-	var imgBG1 = game.add.image(game.world.centerX, game.world.centerY, 'BG1');//.anchor.set(0.5,0)
+	var imgBG1 = game.add.image(game.world.centerX, game.world.centerY, 'BG1').anchor.set(0.5,0.5);
 	imgBG1.height = h;
 	imgBG1.width = w;
 
