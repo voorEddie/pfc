@@ -141,8 +141,8 @@ function create() {
 var countDown;
 function countDownFunc() {
 	countDown++;
-	countDownSpr.scale.x = 0.5;
-	countDownSpr.scale.y = 0.5;
+	countDownSpr.x = w * 0.5;
+	countDownSpr.y = h * 0.15;
 	countDownSpr.loadTexture(countDown);
 	if (countDown == 4)
 		countDownSpr.x = w / 2 - 200;
