@@ -101,7 +101,7 @@ function create() {
 	scoreLabel.fill = 'white';
 
 	timeLabel = game.add.text(w-50, 10, '20');
-	timeLabel.fill = 'yellow';
+	timeLabel.fill = 'white';
 
 	var imgBG3 = game.add.image(0, 0, 'BG3');
 	imgBG3.height = h;
