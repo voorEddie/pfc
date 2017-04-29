@@ -94,18 +94,20 @@ var good_objects,
 	score = 0,
 	points = [];
 
-var testObj1,
-	testObj2,
+var pearObj1,
+	pearObj2,
+	pearObj3,
 	pear1Emtr1,
 	pear1Emtr2,
 	pear2Emtr1,
 	pear2Emtr2,
 	pear3Emtr1,
 	pear3Emtr2,
-	emtr2
+	birdObj,
+	birdEmtr;
 
 var fireRate = 300;//水果的频率
-var eggRate = 0.1;//鸡蛋的概率
+var eggRate = 0.7;//鸡蛋的概率
 var nextFire = 0;
 
 var isActive = true;
@@ -126,18 +128,6 @@ function create() {
 	timeLabel = game.add.text(10, 10, '20');
 	timeLabel.fill = 'white';
 
-	// testObj1 = createGroup(4, 'test1');
-	// emtr1 = game.add.emitter(0, 0, 300);
-	// emtr1.makeParticles('test1-frag');
-	// emtr1.gravity = 300;
-	// emtr1.setYSpeed(-400, 400);
-
-	testObj2 = createGroup(4, 'test2');
-	emtr2 = game.add.emitter(0, 0, 300);
-	emtr2.makeParticles('test2-frag');
-	emtr2.gravity = 300;
-	emtr2.setYSpeed(-400, 400);
-
 	pearObj1 = createGroup(3, 'pear1');
 	pear1Emtr1 = game.add.emitter(0, 0, 300);
 	pear1Emtr1.makeParticles('pear1-f1');
@@ -148,7 +138,7 @@ function create() {
 	pear1Emtr2.gravity = 300;
 	pear1Emtr2.setYSpeed(-400, 400);
 
-	pearObj2 = createGroup(3, 'pear2');
+	pearObj2 = createGroup(2, 'pear2');
 	pear2Emtr1 = game.add.emitter(0, 0, 300);
 	pear2Emtr1.makeParticles('pear2-f1');
 	pear2Emtr1.gravity = 300;
@@ -158,7 +148,7 @@ function create() {
 	pear2Emtr2.gravity = 300;
 	pear2Emtr2.setYSpeed(-400, 400);
 
-	pearObj3 = createGroup(3, 'pear3');
+	pearObj3 = createGroup(1, 'pear3');
 	pear3Emtr1 = game.add.emitter(0, 0, 300);
 	pear3Emtr1.makeParticles('pear3-f1');
 	pear3Emtr1.gravity = 300;
@@ -167,6 +157,12 @@ function create() {
 	pear3Emtr2.makeParticles('pear3-f2');
 	pear3Emtr2.gravity = 300;
 	pear3Emtr2.setYSpeed(-400, 400);
+
+	birdObj = createGroup(2, 'bird');
+	birdEmtr = game.add.emitter(0, 0, 300);
+	birdEmtr.makeParticles('bird-down');
+	birdEmtr.gravity = 300;
+	birdEmtr.setYSpeed(-400, 400);
 
 	gameTime = game.time.create(false);
 	//倒计时
@@ -205,11 +201,11 @@ function createGroup(numItems, sprite) {
 }
 
 function throwObject() {
-	if (game.time.now > nextFire && pearObj1.countDead() > 0 && pearObj2.countDead() > 0 && pearObj3.countDead() > 0 && testObj2.countDead() > 0) {
+	if (game.time.now > nextFire && pearObj1.countDead() > 0 && pearObj2.countDead() > 0 && pearObj3.countDead() > 0) {
 		nextFire = game.time.now + fireRate;
 		throwGoodObject();
-		if (Math.random() > eggRate) {
-			//throwBadObject();
+		if (Math.random() > eggRate && birdObj.countDead() > 0) {
+			throwBadObject();
 		}
 	}
 }
@@ -224,10 +220,9 @@ function throwGoodObject() {
 }
 
 function throwBadObject() {
-	var obj = testObj2.getFirstDead();
+	var obj = birdObj.getFirstDead();
 	obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, 600);
 	obj.anchor.setTo(0.5, 0.5);
-	obj.body.angularAcceleration = 100;
 	game.physics.arcade.moveToXY(obj, game.world.centerX, game.world.centerY, 530);
 }
 
@@ -263,7 +258,7 @@ function update() {
 			pearObj1.forEachExists(checkIntersects);
 			pearObj2.forEachExists(checkIntersects);
 			pearObj3.forEachExists(checkIntersects);
-			testObj2.forEachExists(checkIntersects);
+			birdObj.forEachExists(checkIntersects);
 		}
 	}
 	//	if (game.input.activePointer.isDown && !isActive) {
@@ -312,30 +307,30 @@ function killFruit(fruit) {
 		pear1Emtr1.y = fruit.y;
 		pear1Emtr2.x = fruit.x;
 		pear1Emtr2.y = fruit.y;
-		score += 2;
 		pear1Emtr1.start(true, 2000, null, 1);
 		pear1Emtr2.start(true, 2000, null, 1);
+		score += 2;
 	} else if (fruit.key === 'pear2') {
 		pear2Emtr1.x = fruit.x;
 		pear2Emtr1.y = fruit.y;
 		pear2Emtr2.x = fruit.x;
 		pear2Emtr2.y = fruit.y;
-		score += 2;
 		pear2Emtr1.start(true, 2000, null, 1);
 		pear2Emtr2.start(true, 2000, null, 1);
+		score += 3;
 	} else if (fruit.key === 'pear3') {
 		pear3Emtr1.x = fruit.x;
 		pear3Emtr1.y = fruit.y;
 		pear3Emtr2.x = fruit.x;
 		pear3Emtr2.y = fruit.y;
-		score += 2;
 		pear3Emtr1.start(true, 2000, null, 1);
 		pear3Emtr2.start(true, 2000, null, 1);
-	} else if (fruit.key === 'test2') {
-		emtr2.x = fruit.x;
-		emtr2.y = fruit.y;
-		//score -= 5;现在主要是俩图片长的太像了，就没直接改
-		emtr2.start(true, 2000, null, 2);
+		score += 5;
+	} else if (fruit.key === 'bird') {
+		birdEmtr.x = fruit.x;
+		birdEmtr.y = fruit.y;
+		birdEmtr.start(true, 2000, null, 1);
+		score -= 5;
 	}
 
 	fruit.kill();
