@@ -135,6 +135,7 @@ function create() {
 	countDownSpr = game.add.sprite(w/2, h/2, '1');
 	countDownSpr.scale.x = 0.5;
 	countDownSpr.scale.y = 0.5;
+	countDownSpr.anchor.setTo(0.5,0.5);
 	countDownTime = game.time.create();
 	countDownTime.loop(Phaser.Timer.SECOND, countDownFunc, this);
 	countDown = 1;
@@ -304,12 +305,12 @@ function scoreStateCreate() {
 	preLabel.fill = 'white';
 
 	if (score >= 100) {
-		sprWin = game.add.sprite(w, h, 'win').anchor.set(0.5, 0.5);
+		sprWin = game.add.sprite(w/2, h/2, 'win');
 		sprWin.scale.x = 0.5;
 		sprWin.scale.y = 0.5;
 	}
 	else {
-		sprLose = game.add.sprite(w, h, 'lose').anchor.set(0.5, 0.5);
+		sprLose = game.add.sprite(w/2, h/2, 'lose');
 		sprLose.scale.x = 0.5;
 		sprLose.scale.y = 0.5;
 	}
