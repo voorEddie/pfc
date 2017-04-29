@@ -34,10 +34,15 @@ function preStateCreate() {
 //说明界面
 function introStatePreload() {
 	game.load.image('startButton', 'img/test2.png');
+	game.load.image('BG2', 'img/BG2.png');
 }
 
 function introStateCreate() {
 	game.stage.backgroundColor = '#182d3b';
+
+	var imgBG2 = game.add.image(0, 0, 'BG2');
+	imgBG2.height = h;
+	imgBG2.width = w;
 
 	var preLabel = game.add.text(game.world.centerX - 130, 200, '游戏玩法说明');
 	preLabel.fill = 'white';
@@ -58,7 +63,7 @@ function preload() {
 	game.load.image('2', 'img/djs2.png');
 	game.load.image('1', 'img/djs3.png');
 	game.load.image('4', 'img/djs0.png');
-
+	game.load.image('BG3', 'img/BG3.png');
 
 	// 1号鸭梨 + 对应的两瓣
 	game.load.image('pear1', 'img/330001.png');
@@ -97,6 +102,10 @@ function create() {
 
 	timeLabel = game.add.text(10, 10, 'time:20');
 	timeLabel.fill = 'white';
+
+	var imgBG3 = game.add.image(0, 0, 'BG2');
+	imgBG3.height = h;
+	imgBG3.width = w;
 
 	// testObj1 = createGroup(4, 'test1');
 	// emtr1 = game.add.emitter(0, 0, 300);
@@ -281,10 +290,15 @@ function scoreStatePreload() {
 	game.load.image('shareButton', 'img/shareButton.png');
 	game.load.image('win', 'img/win.png');
 	game.load.image('lose', 'img/lose.png');
+	game.load.image('BG4','img/BG4.png');
 }
 
 function scoreStateCreate() {
 	game.stage.backgroundColor = '#182d3b';
+
+	var imgBG4 = game.add.image(0, 0, 'BG4');
+	imgBG4.height = h;
+	imgBG4.width = w;
 
 	var preLabel = game.add.text(game.world.centerX - 110, 100, '游戏结束' + '\n得分:' + score, { font: "45px" });
 	preLabel.fill = 'white';
