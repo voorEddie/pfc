@@ -144,7 +144,7 @@ function countDownFunc() {
 	countDownSpr.loadTexture(countDown);
 	countDownSpr.anchor.setTo(0.5,0.5);
 	countDownSpr.width = w * 0.2;
-	countDownSpr.height = y * 0.2;
+	countDownSpr.height = h * 0.2;
 	if (countDown == 4) {
 		countDownSpr.width = w * 0.15;
 		countDownSpr.height = h * 0.5;
