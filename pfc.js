@@ -70,6 +70,20 @@ function preload() {
 	game.load.image('pear1-f1', 'img/330002.png');
 	game.load.image('pear1-f2', 'img/330003.png');
 
+	// 2号鸭梨 + 对应的两瓣
+	game.load.image('pear2', 'img/330004.png');
+	game.load.image('pear2-f1', 'img/330005.png');
+	game.load.image('pear2-f2', 'img/330006.png');
+
+	// 2号鸭梨 + 对应的两瓣
+	game.load.image('pear3', 'img/330007.png');
+	game.load.image('pear3-f1', 'img/330008.png');
+	game.load.image('pear3-f2', 'img/330009.png');
+
+	// 鸟 + 鸟被揍
+	game.load.image('bird', 'img/330010.png');
+	game.load.image('bird-down', 'img/330011.png');
+
 }
 
 var good_objects,
@@ -83,6 +97,11 @@ var good_objects,
 var testObj1,
 	testObj2,
 	pear1Emtr1,
+	pear1Emtr2,
+	pear2Emtr1,
+	pear2Emtr2,
+	pear3Emtr1,
+	pear3Emtr2,
 	emtr2
 
 var fireRate = 300;//水果的频率
@@ -95,6 +114,10 @@ function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.physics.arcade.gravity.y = 300;
 
+	var imgBG3 = game.add.image(0, 0, 'BG3');
+	imgBG3.height = h;
+	imgBG3.width = w;
+
 	slashes = game.add.graphics(0, 0);
 
 	scoreLabel = game.add.text(w / 2 - 50, h - 130, '0分');
@@ -102,10 +125,6 @@ function create() {
 
 	timeLabel = game.add.text(10, 10, '20');
 	timeLabel.fill = 'white';
-
-	var imgBG3 = game.add.image(0, 0, 'BG3');
-	imgBG3.height = h;
-	imgBG3.width = w;
 
 	// testObj1 = createGroup(4, 'test1');
 	// emtr1 = game.add.emitter(0, 0, 300);
@@ -119,7 +138,7 @@ function create() {
 	emtr2.gravity = 300;
 	emtr2.setYSpeed(-400, 400);
 
-	pear1Obj = createGroup(4, 'pear1');
+	pearObj1 = createGroup(3, 'pear1');
 	pear1Emtr1 = game.add.emitter(0, 0, 300);
 	pear1Emtr1.makeParticles('pear1-f1');
 	pear1Emtr1.gravity = 300;
@@ -128,6 +147,26 @@ function create() {
 	pear1Emtr2.makeParticles('pear1-f2');
 	pear1Emtr2.gravity = 300;
 	pear1Emtr2.setYSpeed(-400, 400);
+
+	pearObj2 = createGroup(3, 'pear2');
+	pear2Emtr1 = game.add.emitter(0, 0, 300);
+	pear2Emtr1.makeParticles('pear2-f1');
+	pear2Emtr1.gravity = 300;
+	pear2Emtr1.setYSpeed(-400, 400);
+	pear2Emtr2 = game.add.emitter(0, 0, 300);
+	pear2Emtr2.makeParticles('pear2-f2');
+	pear2Emtr2.gravity = 300;
+	pear2Emtr2.setYSpeed(-400, 400);
+
+	pearObj3 = createGroup(3, 'pear3');
+	pear3Emtr1 = game.add.emitter(0, 0, 300);
+	pear3Emtr1.makeParticles('pear3-f1');
+	pear3Emtr1.gravity = 300;
+	pear3Emtr1.setYSpeed(-400, 400);
+	pear3Emtr2 = game.add.emitter(0, 0, 300);
+	pear3Emtr2.makeParticles('pear3-f2');
+	pear3Emtr2.gravity = 300;
+	pear3Emtr2.setYSpeed(-400, 400);
 
 	gameTime = game.time.create(false);
 	//倒计时
@@ -166,7 +205,7 @@ function createGroup(numItems, sprite) {
 }
 
 function throwObject() {
-	if (game.time.now > nextFire && pear1Obj.countDead() > 0 && testObj2.countDead() > 0) {
+	if (game.time.now > nextFire && pearObj1.countDead() > 0 && pearObj2.countDead() > 0 && pearObj3.countDead() > 0 && testObj2.countDead() > 0) {
 		nextFire = game.time.now + fireRate;
 		throwGoodObject();
 		if (Math.random() > eggRate) {
@@ -176,7 +215,8 @@ function throwObject() {
 }
 
 function throwGoodObject() {
-	var obj = pear1Obj.getFirstDead();
+	var objs = [pearObj1, pearObj2, pearObj3];
+	var obj = objs[Math.floor(Math.random() * objs.length)].getFirstDead();
 	obj.reset(game.world.centerX + Math.random() * 100 - Math.random() * 100, 600);
 	obj.anchor.setTo(0.5, 0.5);
 	obj.body.angularAcceleration = 100;
@@ -220,7 +260,9 @@ function update() {
 		line = new Phaser.Line(points[i].x, points[i].y, points[i - 1].x, points[i - 1].y);
 		// game.debug.geom(line);
 		if (isActive) {
-			pear1Obj.forEachExists(checkIntersects);
+			pearObj1.forEachExists(checkIntersects);
+			pearObj2.forEachExists(checkIntersects);
+			pearObj3.forEachExists(checkIntersects);
 			testObj2.forEachExists(checkIntersects);
 		}
 	}
@@ -273,6 +315,22 @@ function killFruit(fruit) {
 		score += 2;
 		pear1Emtr1.start(true, 2000, null, 1);
 		pear1Emtr2.start(true, 2000, null, 1);
+	} else if (fruit.key === 'pear2') {
+		pear2Emtr1.x = fruit.x;
+		pear2Emtr1.y = fruit.y;
+		pear2Emtr2.x = fruit.x;
+		pear2Emtr2.y = fruit.y;
+		score += 2;
+		pear2Emtr1.start(true, 2000, null, 1);
+		pear2Emtr2.start(true, 2000, null, 1);
+	} else if (fruit.key === 'pear3') {
+		pear3Emtr1.x = fruit.x;
+		pear3Emtr1.y = fruit.y;
+		pear3Emtr2.x = fruit.x;
+		pear3Emtr2.y = fruit.y;
+		score += 2;
+		pear3Emtr1.start(true, 2000, null, 1);
+		pear3Emtr2.start(true, 2000, null, 1);
 	} else if (fruit.key === 'test2') {
 		emtr2.x = fruit.x;
 		emtr2.y = fruit.y;
@@ -318,7 +376,6 @@ function scoreStateCreate() {
 	game.add.button(game.world.centerX - 195, 600, 'restartButton', onRestartClick, this, 2, 1, 0);
 	game.add.button(game.world.centerX + 95, 600, 'shareButton', onShareButtonClick, this, 2, 1, 0);
 
-	console.info(score)
 	var highscore = Math.max(score, sessionStorage.getItem("pfcHighscore"));
 	sessionStorage.setItem("pfcHighscore", highscore);
 
