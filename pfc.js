@@ -100,7 +100,7 @@ function create() {
 	scoreLabel = game.add.text(w / 2 - 50, h - 130, '0分');
 	scoreLabel.fill = 'white';
 
-	timeLabel = game.add.text(w-50, 10, '20');
+	timeLabel = game.add.text(10, 10, '20');
 	timeLabel.fill = 'white';
 
 	var imgBG3 = game.add.image(0, 0, 'BG3');
@@ -143,10 +143,12 @@ function countDownFunc() {
 	countDown++;
 	countDownSpr.loadTexture(countDown);
 	countDownSpr.anchor.setTo(0.5,0.5);
-	countDownSpr.x = w * 0.5;
-	countDownSpr.y = h * 0.15;
-	if (countDown == 4)
-		countDownSpr.x = w / 2 - 200;
+	countDownSpr.width = w * 0.2;
+	countDownSpr.height = y * 0.2;
+	if (countDown == 4) {
+		countDownSpr.width = w * 0.15;
+		countDownSpr.height = h * 0.5;
+	} 
 	if (countDown >= 5) {
 		countDownTime.stop();
 		gameTime.add(Phaser.Timer.SECOND * 20, gameOver, this);
