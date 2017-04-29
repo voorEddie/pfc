@@ -21,11 +21,14 @@ function preStateCreate() {
 	imgBG1.height = h;
 	imgBG1.width = w;
 
-	var StartButton = game.add.button(game.world.centerX-28, 0, 'startButton', onStartClick, this, 2, 1, 0);
-	StartButton.scale.setTo(0.75, 0.75);
+	var StartButton = game.add.button(w, h * .6, 'startButton', onStartClick, this, 2, 1, 0);
+	StartButton.anchor.setTo(1, 0);
+	StartButton.width = w * .45;
+	StartButton.height = StartButton.width / 1.9;
 
 	function onStartClick() {
 		game.state.start('intro');
+
 	}
 }
 //说明界面
