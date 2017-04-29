@@ -100,8 +100,8 @@ function create() {
 	scoreLabel = game.add.text(w / 2 - 50, h - 130, '0分');
 	scoreLabel.fill = 'white';
 
-	timeLabel = game.add.text(10, 10, 'time:20');
-	timeLabel.fill = 'white';
+	timeLabel = game.add.text(w-50, 10, '20');
+	timeLabel.fill = 'yellow';
 
 	var imgBG3 = game.add.image(0, 0, 'BG3');
 	imgBG3.height = h;
@@ -132,7 +132,7 @@ function create() {
 	gameTime = game.time.create(false);
 	//倒计时
 	isActive = false;
-	countDownSpr = game.add.sprite(w / 2 - 80, h / 2, '1');
+	countDownSpr = game.add.sprite(w, h, '1').anchor.set(0.5,0.5);
 	countDownTime = game.time.create();
 	countDownTime.loop(Phaser.Timer.SECOND, countDownFunc, this);
 	countDown = 1;
@@ -195,7 +195,7 @@ function throwBadObject() {
 function update() {
 	if (isActive) {
 		throwObject();
-		timeLabel.text = 'time:' + Math.round(gameTime.duration / Phaser.Timer.SECOND);
+		timeLabel.text = Math.round(gameTime.duration / Phaser.Timer.SECOND);
 	}
 	points.push({
 		x: game.input.x,
@@ -305,10 +305,16 @@ function scoreStateCreate() {
 	var preLabel = game.add.text(game.world.centerX - 110, 100, '游戏结束' + '\n得分:' + score, { font: "45px" });
 	preLabel.fill = 'white';
 
-	if (score >= 100)
-		game.add.sprite(w / 2 - 200, 250, 'win');
-	else
-		game.add.sprite(w / 2 - 200, 250, 'lose');
+	if (score >= 100) {
+		sprWin = game.add.sprite(w, h, 'win').anchor.set(0.5, 0.5);
+		sprWin.scale.x = 0.5;
+		sprWin.scale.y = 0.5;
+	}
+	else {
+		sprLose = game.add.sprite(w, h, 'lose').anchor.set(0.5, 0.5);
+		sprLose.scale.x = 0.5;
+		sprLose.scale.y = 0.5;
+	}
 
 	game.add.button(game.world.centerX - 195, 600, 'restartButton', onRestartClick, this, 2, 1, 0);
 	game.add.button(game.world.centerX + 95, 600, 'shareButton', onShareButtonClick, this, 2, 1, 0);
