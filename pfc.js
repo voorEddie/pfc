@@ -33,7 +33,7 @@ function preStateCreate() {
 }
 //说明界面
 function introStatePreload() {
-	game.load.image('startButton', 'img/test2.png');
+	game.load.image('startButton', 'img/btn0002.png');
 	game.load.image('BG2', 'img/BG2.png');
 }
 
@@ -44,10 +44,10 @@ function introStateCreate() {
 	imgBG2.height = h;
 	imgBG2.width = w;
 
-	var preLabel = game.add.text(game.world.centerX - 130, 200, '游戏玩法说明');
-	preLabel.fill = 'white';
-
-	var StartButton = game.add.button(game.world.centerX - 95, 400, 'startButton', onStartClick, this, 2, 1, 0);
+	var StartButton = game.add.button(w, h * .63, 'startButton', onStartClick, this, 2, 1, 0);
+	StartButton.anchor.setTo(1, 0);
+	StartButton.width = w * .48;
+	StartButton.height = StartButton.width / 1.9;
 
 	function onStartClick() {
 		game.state.start('main');
@@ -103,7 +103,7 @@ function create() {
 	timeLabel = game.add.text(10, 10, 'time:20');
 	timeLabel.fill = 'white';
 
-	var imgBG3 = game.add.image(0, 0, 'BG2');
+	var imgBG3 = game.add.image(0, 0, 'BG3');
 	imgBG3.height = h;
 	imgBG3.width = w;
 
@@ -141,6 +141,8 @@ function create() {
 var countDown;
 function countDownFunc() {
 	countDown++;
+	countDownSpr.scale.x = 0.5;
+	countDownSpr.scale.y = 0.5;
 	countDownSpr.loadTexture(countDown);
 	if (countDown == 4)
 		countDownSpr.x = w / 2 - 200;
