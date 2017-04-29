@@ -10,7 +10,7 @@ game.state.add('score', { preload: scoreStatePreload, create: scoreStateCreate }
 game.state.start("pre");
 //开始界面
 function preStatePreload() {
-	game.load.image('startButton', 'img/btn0001.png');
+	game.load.spritesheet('startButton', 'img/start_btn_sprite.png', 633, 339);
 	game.load.image('BG1', 'img/BG1.png');
 }
 
@@ -34,6 +34,7 @@ function preStateCreate() {
 //说明界面
 function introStatePreload() {
 	game.load.image('startButton', 'img/btn0002.png');
+	game.load.spritesheet('nextButton', 'img/next_btn_sprite.png', 633, 339);
 	game.load.image('BG2', 'img/BG2.png');
 }
 
@@ -44,7 +45,7 @@ function introStateCreate() {
 	imgBG2.height = h;
 	imgBG2.width = w;
 
-	var StartButton = game.add.button(w, h * .63, 'startButton', onStartClick, this, 2, 1, 0);
+	var StartButton = game.add.button(w, h * .63, 'nextButton', onStartClick, this, 2, 1, 0);
 	StartButton.anchor.setTo(1, 0);
 	StartButton.width = w * .48;
 	StartButton.height = StartButton.width / 1.9;
