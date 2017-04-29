@@ -33,8 +33,7 @@ function preStateCreate() {
 }
 //说明界面
 function introStatePreload() {
-	game.load.image('startButton', 'img/btn0002.png');
-	game.load.spritesheet('nextButton', 'img/next_btn_sprite.png', 633, 339);
+	game.load.spritesheet('nextButton', 'img/next_btn_sprite.png', 635, 339);
 	game.load.image('BG2', 'img/BG2.png');
 }
 
@@ -56,10 +55,6 @@ function introStateCreate() {
 }
 //游戏界面
 function preload() {
-	// game.load.image('test1', 'img/test1.png');
-	// game.load.image('test1-frag', 'img/test1-frag.png');
-	game.load.image('test2', 'img/test2.png');
-	game.load.image('test2-frag', 'img/test2-frag.png');
 	game.load.image('3', 'img/djs1.png');
 	game.load.image('2', 'img/djs2.png');
 	game.load.image('1', 'img/djs3.png');
@@ -136,18 +131,6 @@ function create() {
 	timeLabel = game.add.text(w * 0.85, h * 0.09, '20', { font: "55px" });
 	timeLabel.anchor.setTo(1,0.5);
 	timeLabel.fill = 'yellow';
-
-	// testObj1 = createGroup(4, 'test1');
-	// emtr1 = game.add.emitter(0, 0, 300);
-	// emtr1.makeParticles('test1-frag');
-	// emtr1.gravity = 300;
-	// emtr1.setYSpeed(-400, 400);
-
-	testObj2 = createGroup(4, 'test2');
-	emtr2 = game.add.emitter(0, 0, 300);
-	emtr2.makeParticles('test2-frag');
-	emtr2.gravity = 300;
-	emtr2.setYSpeed(-400, 400);
 
 	pearObj1 = createGroup(3, 'pear1');
 	pear1Emtr1 = game.add.emitter(0, 0, 300);
@@ -361,8 +344,8 @@ function killFruit(fruit) {
 }
 //得分面板
 function scoreStatePreload() {
-	game.load.image('restartButton', 'img/btn20001.png');
-	game.load.image('shareButton', 'img/btn20002.png');
+	game.load.spritesheet('restartButton', 'img/restart_btn_sprite.png', 373, 240);
+	game.load.spritesheet('shareButton', 'img/share_btn_sprite.png', 634, 339);
 	game.load.image('win', 'img/win.png');
 	game.load.image('lose', 'img/lose.png');
 	game.load.image('BG4','img/BG4.png');
@@ -385,28 +368,29 @@ function scoreStateCreate() {
 	else if (score >= 60) textByJingYe = '味味说：等我伤\n好了，一定要报\n仇！好疼啊！';
 	else textByJingYe = '味味说：你丫是看\n准了专门来砍\n我的是不是！';
 
-	var preLabel = game.add.text(w * 0.65, h * 0.55, '得分:' + score + '分\n' + textByJingYe, { font: "25px" ,fontWeight: "bold"});
+	var resultSpr = game.add.sprite(w * 0.55, h * 0.38, 'win');
+	resultSpr.scale.x = 0.45;
+	resultSpr.scale.y = 0.45;
+	resultSpr.anchor.setTo(0.5,0.5);
+
+	var preLabel = game.add.text(w * 0.65, h * 0.55, '得分:' + score + '分\n' + textByJingYe, { font: "18px" ,fontWeight: "bold"});
 	preLabel.anchor.setTo(0.5,0.5);
 	preLabel.fill = 'white';
-
-	resultSpr = game.add.sprite(w * 0.55, h * 0.38, 'win');
-	resultSpr.scale.x = 0.6;
-	resultSpr.scale.y = 0.6;
-	resultSpr.anchor.setTo(0.5,0.5);
 
 	if (score >= 100)
 		resultSpr.loadTexture('win');
 	else
 		resultSpr.loadTexture('lose');
 
-	restartBnt = game.add.button(0, h * 0.85, 'restartButton', onRestartClick, this, 2, 1, 0);
-	restartBnt.scale.x = 0.5;
-	restartBnt.scale.y = 0.5;
-	restartBnt.anchor.setTo(0,0.5);
-	shareBnt = game.add.button(w, h * 0.8, 'shareButton', onShareButtonClick, this, 2, 1, 0);
-	shareBnt.scale.x = 0.5;
-	shareBnt.scale.y = 0.5;
-	shareBnt.anchor.setTo(1,0.5);
+	var restartBtn = game.add.button(0, h * 0.95, 'restartButton', onRestartClick, this, 2, 1, 0);
+	restartBtn.anchor.setTo(0, 1);
+	restartBtn.width = w * .3;
+	restartBtn.height = restartBtn.width / 1.5;
+
+	var shareBtn = game.add.button(w, h * 0.75, 'shareButton', onShareButtonClick, this, 2, 1, 0);
+	shareBtn.anchor.setTo(1, 0);
+	shareBtn.width = w * .5;
+	shareBtn.height = restartBtn.width / 1.4;
 
 	var highscore = Math.max(score, sessionStorage.getItem("pfcHighscore"));
 	sessionStorage.setItem("pfcHighscore", highscore);
