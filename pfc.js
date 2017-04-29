@@ -17,8 +17,8 @@ function preStatePreload() {
 function preStateCreate() {
 	game.stage.backgroundColor = '#182d3b';
 
-	var imgBG1 = game.add.image(game.world.centerX / 2, 0, 'BG1');//.anchor.set(0.5,0)
-	imgBG1.height = h;
+	var imgBG1 = game.add.image(0, 0, 'BG1');//.anchor.set(0.5,0)
+	//imgBG1.height = h;
 
 	var StartButton = game.add.button(game.world.centerX-28, 0, 'startButton', onStartClick, this, 2, 1, 0);
 	StartButton.scale.setTo(0.75, 0.75);
