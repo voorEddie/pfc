@@ -10,16 +10,18 @@ game.state.add('score', { preload: scoreStatePreload, create: scoreStateCreate }
 game.state.start("pre");
 //开始界面
 function preStatePreload() {
-	game.load.image('startButton', 'img/test2.png');
+	game.load.image('startButton', 'img/btn0001.png');
+	game.load.image('BG1', 'img/BG1.png');
 }
 
 function preStateCreate() {
 	game.stage.backgroundColor = '#182d3b';
 
-	var preLabel = game.add.text(game.world.centerX - 110, 200, '京爷切菜');
-	preLabel.fill = 'white';
+	var imgBG1 = game.add.image(game.world.centerX / 2, 0, 'BG1');//.anchor.set(0.5,0)
+	imgBG1.height = h;
 
-	var StartButton = game.add.button(game.world.centerX - 95, 400, 'startButton', onStartClick, this, 2, 1, 0);
+	var StartButton = game.add.button(game.world.centerX-28, 0, 'startButton', onStartClick, this, 2, 1, 0);
+	StartButton.scale.setTo(0.75, 0.75);
 
 	function onStartClick() {
 		game.state.start('intro');

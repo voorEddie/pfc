@@ -1,0 +1,35 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is ahead of 'origin/master' by 1 commit.
+#   (use "git push" to publish your local commits)
+#
+# Changes to be committed:
+#	new file:   img/330001.png
+#	new file:   img/330002.png
+#	new file:   img/330003.png
+#	new file:   img/330004.png
+#	new file:   img/330005.png
+#	new file:   img/330006.png
+#	new file:   img/330007.png
+#	new file:   img/330008.png
+#	new file:   img/330009.png
+#	new file:   img/330010.png
+#	new file:   img/330011.png
+#	new file:   img/330012.png
+#	new file:   img/BG1.png
+#	new file:   img/BG2.png
+#	new file:   img/BG3.png
+#	new file:   img/BG4.png
+#	new file:   img/btn0001.png
+#	new file:   img/btn0002.png
+#	new file:   img/btn0003.png
+#	new file:   img/btn0004.png
+#	new file:   img/btn20001.png
+#	new file:   img/btn20002.png
+#	new file:   img/btn20003.png
+#	new file:   img/btn20004.png
+#	modified:   pfc.js
+#
+
