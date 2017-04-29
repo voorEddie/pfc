@@ -132,7 +132,7 @@ function create() {
 	gameTime = game.time.create(false);
 	//倒计时
 	isActive = false;
-	countDownSpr = game.add.sprite(w, h, '1').anchor.set(0.5,0.5);
+	countDownSpr = game.add.sprite(w, h, '1');
 	countDownTime = game.time.create();
 	countDownTime.loop(Phaser.Timer.SECOND, countDownFunc, this);
 	countDown = 1;
@@ -141,9 +141,10 @@ function create() {
 var countDown;
 function countDownFunc() {
 	countDown++;
+	countDownSpr.loadTexture(countDown);
+	countDownSpr.anchor.setTo(0.5,0.5);
 	countDownSpr.x = w * 0.5;
 	countDownSpr.y = h * 0.15;
-	countDownSpr.loadTexture(countDown);
 	if (countDown == 4)
 		countDownSpr.x = w / 2 - 200;
 	if (countDown >= 5) {
