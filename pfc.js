@@ -15,7 +15,7 @@ function preStatePreload() {
 }
 
 function preStateCreate() {
-	game.stage.backgroundColor = '#182d3b';
+	game.stage.backgroundColor = '#666666';
 
 	var imgBG1 = game.add.image(0, 0, 'BG1');
 	imgBG1.height = h;
@@ -38,7 +38,7 @@ function introStatePreload() {
 }
 
 function introStateCreate() {
-	game.stage.backgroundColor = '#182d3b';
+	game.stage.backgroundColor = '#666666';
 
 	var imgBG2 = game.add.image(0, 0, 'BG2');
 	imgBG2.height = h;
@@ -112,6 +112,8 @@ var isActive = true;
 function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.physics.arcade.gravity.y = 300;
+
+	game.stage.backgroundColor = '#666666';
 
 	var imgBG3 = game.add.image(0, 0, 'BG3');
 	imgBG3.height = h;
@@ -348,7 +350,7 @@ function scoreStatePreload() {
 }
 
 function scoreStateCreate() {
-	game.stage.backgroundColor = '#182d3b';
+	game.stage.backgroundColor = '#666666';
 
 	var imgBG4 = game.add.image(0, 0, 'BG4');
 	imgBG4.height = h;
