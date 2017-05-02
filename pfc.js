@@ -11,7 +11,7 @@ game.state.start("pre");
 //开始界面
 function preStatePreload() {
 	game.load.spritesheet('startButton', 'img/start_btn_sprite.png', 633, 339);
-	game.load.image('BG1', 'img/BG1.png');
+	game.load.image('BG1', 'img/BG1.jpg');
 }
 
 function preStateCreate() {
@@ -34,7 +34,7 @@ function preStateCreate() {
 //说明界面
 function introStatePreload() {
 	game.load.spritesheet('nextButton', 'img/next_btn_sprite.png', 635, 339);
-	game.load.image('BG2', 'img/BG2.png');
+	game.load.image('BG2', 'img/BG2.jpg');
 }
 
 function introStateCreate() {
@@ -44,7 +44,7 @@ function introStateCreate() {
 	imgBG2.height = h;
 	imgBG2.width = w;
 
-	var StartButton = game.add.button(w, h * .63, 'nextButton', onStartClick, this, 2, 1, 0);
+	var StartButton = game.add.button(w, h * .55, 'nextButton', onStartClick, this, 2, 1, 0);
 	StartButton.anchor.setTo(1, 0);
 	StartButton.width = w * .48;
 	StartButton.height = StartButton.width / 1.9;
@@ -59,7 +59,7 @@ function preload() {
 	game.load.image('2', 'img/djs2.png');
 	game.load.image('1', 'img/djs3.png');
 	game.load.image('4', 'img/djs0.png');
-	game.load.image('BG3', 'img/BG3.png');
+	game.load.image('BG3', 'img/BG3.jpg');
 	game.load.image('scoreLabel','img/btn0003.png');
 
 	// 1号鸭梨 + 对应的两瓣
@@ -119,18 +119,13 @@ function create() {
 
 	slashes = game.add.graphics(0, 0);
 
-	var scoreLabelImg = game.add.image(w/2, h * 0.85, 'scoreLabel');
-	scoreLabelImg.scale.x = 0.5;
-	scoreLabelImg.scale.y = 0.5;
-	scoreLabelImg.anchor.setTo(0.5,0.5);
-
-	scoreLabel = game.add.text(w * 0.6, h * 0.86, '0', { font: "55px" });
-	scoreLabel.anchor.setTo(1,0.5);
-	scoreLabel.fill = 'purple';
-
-	timeLabel = game.add.text(w * 0.85, h * 0.09, '20', { font: "55px" });
+	timeLabel = game.add.text(w * 0.6, h * 0.93, '20', { font: "55px" ,fontWeight: "bold"});
 	timeLabel.anchor.setTo(1,0.5);
-	timeLabel.fill = 'yellow';
+	timeLabel.fill = 'white';
+
+	scoreLabel = game.add.text(w * 0.9, h * 0.125, '0', { font: "55px" ,fontWeight: "bold"});
+	scoreLabel.anchor.setTo(1,0.5);
+	scoreLabel.fill = '#863ADB';
 
 	pearObj1 = createGroup(3, 'pear1');
 	pear1Emtr1 = game.add.emitter(0, 0, 300);
@@ -348,7 +343,8 @@ function scoreStatePreload() {
 	game.load.spritesheet('shareButton', 'img/share_btn_sprite.png', 634, 339);
 	game.load.image('win', 'img/win.png');
 	game.load.image('lose', 'img/lose.png');
-	game.load.image('BG4','img/BG4.png');
+	game.load.image('BG4','img/BG4.jpg');
+	game.load.image('sharePic','img/fx.png');
 }
 
 function scoreStateCreate() {
@@ -357,6 +353,11 @@ function scoreStateCreate() {
 	var imgBG4 = game.add.image(0, 0, 'BG4');
 	imgBG4.height = h;
 	imgBG4.width = w;
+
+	var sharePicSpr = game.add.image(0, 0, 'sharePic');
+	sharePicSpr.width = w;
+	sharePicSpr.visible = false;
+	sharePicSpr.events.onInputDown.add(closePic,this);
 
 	var textByJingYe;
 	if (score >= 150) textByJingYe = '京爷说：保留成绩截\n图，发给公众号\n吧，大师！';
@@ -403,6 +404,11 @@ function scoreStateCreate() {
 	}
 
 	function onShareButtonClick() {
-		//调用朋友圈分享接口
+		sharePicSpr.visible = true;
+		sharePicSpr.inputEnabled = true;
+	}
+	function closePic() {
+		sharePicSpr.visible = false;
+		sharePicSpr.inputEnabled = false;
 	}
 }
