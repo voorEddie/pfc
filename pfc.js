@@ -60,7 +60,7 @@ function preload() {
 	game.load.image('1', 'img/djs3.png');
 	game.load.image('4', 'img/djs0.png');
 	game.load.image('BG3', 'img/BG3.jpg');
-	game.load.image('scoreLabel','img/btn0003.png');
+	game.load.image('scoreLabel', 'img/btn0003.png');
 
 	// 1号鸭梨 + 对应的两瓣
 	game.load.image('pear1', 'img/330001.png');
@@ -119,12 +119,12 @@ function create() {
 
 	slashes = game.add.graphics(0, 0);
 
-	timeLabel = game.add.text(w * 0.6, h * 0.93, '20', { font: "55px" ,fontWeight: "bold"});
-	timeLabel.anchor.setTo(1,0.5);
+	timeLabel = game.add.text(w * 0.6, h * 0.93, '20', { font: "55px", fontWeight: "bold" });
+	timeLabel.anchor.setTo(1, 0.5);
 	timeLabel.fill = 'white';
 
-	scoreLabel = game.add.text(w * 0.9, h * 0.125, '0', { font: "55px" ,fontWeight: "bold"});
-	scoreLabel.anchor.setTo(1,0.5);
+	scoreLabel = game.add.text(w * 0.9, h * 0.125, '0', { font: "55px", fontWeight: "bold" });
+	scoreLabel.anchor.setTo(1, 0.5);
 	scoreLabel.fill = '#863ADB';
 
 	pearObj1 = createGroup(3, 'pear1');
@@ -166,10 +166,10 @@ function create() {
 	gameTime = game.time.create(false);
 	//倒计时
 	isActive = false;
-	countDownSpr = game.add.sprite(w/2, h/2, '1');
+	countDownSpr = game.add.sprite(w / 2, h / 2, '1');
 	countDownSpr.scale.x = 0.5;
 	countDownSpr.scale.y = 0.5;
-	countDownSpr.anchor.setTo(0.5,0.5);
+	countDownSpr.anchor.setTo(0.5, 0.5);
 	countDownTime = game.time.create();
 	countDownTime.loop(Phaser.Timer.SECOND, countDownFunc, this);
 	countDown = 1;
@@ -343,8 +343,8 @@ function scoreStatePreload() {
 	game.load.spritesheet('shareButton', 'img/share_btn_sprite.png', 634, 339);
 	game.load.image('win', 'img/win.png');
 	game.load.image('lose', 'img/lose.png');
-	game.load.image('BG4','img/BG4.jpg');
-	game.load.image('sharePic','img/fx.png');
+	game.load.image('BG4', 'img/BG4.jpg');
+	game.load.image('sharePic', 'img/fx.png');
 }
 
 function scoreStateCreate() {
@@ -353,11 +353,6 @@ function scoreStateCreate() {
 	var imgBG4 = game.add.image(0, 0, 'BG4');
 	imgBG4.height = h;
 	imgBG4.width = w;
-
-	var sharePicSpr = game.add.image(0, 0, 'sharePic');
-	sharePicSpr.width = w;
-	sharePicSpr.visible = false;
-	sharePicSpr.events.onInputDown.add(closePic,this);
 
 	var textByJingYe;
 	if (score >= 150) textByJingYe = '京爷说：保留成绩截\n图，发给公众号\n吧，大师！';
@@ -370,12 +365,12 @@ function scoreStateCreate() {
 	else textByJingYe = '味味说：你丫是看\n准了专门来砍\n我的是不是！';
 
 	var resultSpr = game.add.sprite(w * 0.55, h * 0.38, 'win');
-	resultSpr.scale.x = 0.45;
-	resultSpr.scale.y = 0.45;
-	resultSpr.anchor.setTo(0.5,0.5);
+	resultSpr.scale.x = 0.35;
+	resultSpr.scale.y = 0.35;
+	resultSpr.anchor.setTo(0.5, 0.5);
 
-	var preLabel = game.add.text(w * 0.65, h * 0.55, '得分:' + score + '分\n' + textByJingYe, { font: "18px" ,fontWeight: "bold"});
-	preLabel.anchor.setTo(0.5,0.5);
+	var preLabel = game.add.text(w * 0.67, h * 0.55, '得分:' + score + '分\n' + textByJingYe, { font: "18px", fontWeight: "bold" });
+	preLabel.anchor.setTo(0.5, 0.5);
 	preLabel.fill = 'white';
 
 	if (score >= 100)
@@ -395,6 +390,12 @@ function scoreStateCreate() {
 
 	var highscore = Math.max(score, sessionStorage.getItem("pfcHighscore"));
 	sessionStorage.setItem("pfcHighscore", highscore);
+
+	var sharePicSpr = game.add.image(0, 0, 'sharePic');
+	sharePicSpr.width = w;
+	sharePicSpr.height = h;
+	sharePicSpr.visible = false;
+	sharePicSpr.events.onInputDown.add(closePic, this);
 
 	function onRestartClick() {
 		isActive = true;
