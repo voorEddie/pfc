@@ -120,6 +120,10 @@ function create() {
 	imgBG3.width = w;
 
 	slashes = game.add.graphics(0, 0);
+	//debug
+	//debug1 = game.add.text(10, 10, isActive, { font: "55px", fontWeight: "bold" });
+	//debug1.anchor.setTo(1, 0.5);
+	//debug1.fill = 'white';
 
 	timeLabel = game.add.text(w * 0.6, h * 0.93, '20', { font: "55px", fontWeight: "bold" });
 	timeLabel.anchor.setTo(1, 0.5);
