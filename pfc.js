@@ -63,7 +63,7 @@ function preload() {
 	game.load.image('scoreLabel', 'img/btn0003.png');
 
 	// 1号鸭梨 + 对应的两瓣
-	game.load.image('pear1', 'img/330001.jpg');
+	game.load.image('pear1', 'img/330001.png');
 	game.load.image('pear1-f1', 'img/330002.png');
 	game.load.image('pear1-f2', 'img/330003.png');
 
