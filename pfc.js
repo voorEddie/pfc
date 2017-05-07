@@ -61,9 +61,10 @@ function preload() {
 	game.load.image('4', 'img/djs0.png');
 	game.load.image('BG3', 'img/BG3.jpg');
 	game.load.image('scoreLabel', 'img/btn0003.png');
+	game.load.image('warnPic', 'img/ts.png');
 
 	// 1号鸭梨 + 对应的两瓣
-	game.load.image('pear1', 'img/123.jpg');
+	game.load.image('pear1', 'img/330001.png');
 	game.load.image('pear1-f1', 'img/330002.png');
 	game.load.image('pear1-f2', 'img/330003.png');
 
@@ -101,14 +102,15 @@ var pearObj1,
 	pear3Emtr1,
 	pear3Emtr2,
 	birdObj,
-	birdEmtr;
+	birdEmtr,
+	warnPicSpr;
 
 var fireRate = 300;//水果的频率
 var eggRate = 0.7;//鸡蛋的概率
 var nextFire = 0;
 
 var isActive = true;
-
+var warnTime;
 function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.physics.arcade.gravity.y = 300;
@@ -120,10 +122,6 @@ function create() {
 	imgBG3.width = w;
 
 	slashes = game.add.graphics(0, 0);
-	//debug
-	//debug1 = game.add.text(10, 10, isActive, { font: "55px", fontWeight: "bold" });
-	//debug1.anchor.setTo(1, 0.5);
-	//debug1.fill = 'white';
 
 	timeLabel = game.add.text(w * 0.6, h * 0.93, '20', { font: "55px", fontWeight: "bold" });
 	timeLabel.anchor.setTo(1, 0.5);
@@ -169,6 +167,11 @@ function create() {
 	birdEmtr.gravity = 300;
 	birdEmtr.setYSpeed(-400, 400);
 
+	warnPicSpr = game.add.image(0, 0, 'warnPic');
+	warnPicSpr.width = w;
+	warnPicSpr.visible = false;
+	warnPicSpr.events.onInputDown.add(closePic, this);
+
 	gameTime = game.time.create(false);
 	//倒计时
 	isActive = false;
@@ -180,6 +183,9 @@ function create() {
 	countDownTime.loop(Phaser.Timer.SECOND, countDownFunc, this);
 	countDown = 1;
 	countDownTime.start();
+
+	warnTime = game.time.create();
+	warnTime.add(Phaser.Timer.SECOND * 5, showWarnPic, this);
 }
 var countDown;
 function countDownFunc() {
@@ -189,10 +195,18 @@ function countDownFunc() {
 		countDownTime.stop();
 		gameTime.add(Phaser.Timer.SECOND * 20, gameOver, this);
 		gameTime.start();
+		warnTime.start();
 		isActive = true;
 		countDownSpr.visible = false;
 	}
 
+}
+function showWarnPic() {
+	//如果出现兼容问题，提醒
+	if (score == 0 && warnPicSpr.visible == false) {
+		warnPicSpr.visible = true;
+		warnPicSpr.inputEnabled = true;
+	}
 }
 
 function createGroup(numItems, sprite) {
@@ -236,6 +250,7 @@ function update() {
 		throwObject();
 		timeLabel.text = Math.round(gameTime.duration / Phaser.Timer.SECOND);
 	}
+
 	points.push({
 		x: game.input.x,
 		y: game.input.y
@@ -271,6 +286,10 @@ function update() {
 	//	}
 }
 
+function closePic() {
+	warnPicSpr.visible = false;
+	warnPicSpr.inputEnabled = false;
+}
 var contactPoint = new Phaser.Point(0, 0);
 
 function checkIntersects(fruit, callback) {
@@ -288,13 +307,7 @@ function checkIntersects(fruit, callback) {
 			return;
 		}
 
-		killFruit(fruit);
-
-		// if (fruit.parent == testObj1) {
-		// killFruit(fruit);
-		// } else {
-		// gameOver();
-		// }
+	killFruit(fruit);
 	}
 }
 
@@ -399,7 +412,6 @@ function scoreStateCreate() {
 
 	var sharePicSpr = game.add.image(0, 0, 'sharePic');
 	sharePicSpr.width = w;
-	sharePicSpr.height = h;
 	sharePicSpr.visible = false;
 	sharePicSpr.events.onInputDown.add(closePic, this);
 
